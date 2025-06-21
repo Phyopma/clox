@@ -1,3 +1,5 @@
 build
 .vscode
-CMakePresets.json
+CMake*
+cmake_install.cmake
+Makefile
