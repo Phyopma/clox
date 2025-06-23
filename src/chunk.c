@@ -20,7 +20,6 @@ void freeChunk(Chunk* chunk) {
     initChunk(chunk);
 }
 
-// TODO:  write compressed form, and implement a getLine() function that, given the index of an instruction, determines the line where the instruction occurs
 void writeChunk(Chunk* chunk, uint8_t byte, int line) {
 
     if (chunk-> capacity < chunk -> count + 1) {
@@ -46,6 +45,24 @@ void writeChunk(Chunk* chunk, uint8_t byte, int line) {
 int addConstant(Chunk* chunk, Value value ){
     writeValueArray(&chunk->constants, value);
     return chunk->constants.count - 1;
+}
+
+void writeConstant(Chunk* chunk, Value value, int line) {
+    int constantIndex = addConstant(chunk, value);
+    if (constantIndex < 256) {
+        writeChunk(chunk, OP_CONSTANT, line);
+        writeChunk(chunk, constantIndex, line);
+    } else {
+        writeChunk(chunk, OP_CONSTANT_LONG, line);
+        // little endian
+        // write lower bytes
+        writeChunk(chunk, (constantIndex >> 0) & 0xFF, line);
+        // write middle bytes
+        writeChunk(chunk, (constantIndex >> 8) & 0xFF, line);
+        // write upper bytes
+        writeChunk(chunk, (constantIndex >> 16) & 0xFF, line);
+
+    }
 }
 
 int getLine(Chunk* chunk, int offset) {
