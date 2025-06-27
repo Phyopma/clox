@@ -3,20 +3,27 @@
 #include "common.h"
 #include "value.h"
 
-
 typedef enum
 {
     OP_RETURN,
     OP_CONSTANT,
+    OP_NIL,
+    OP_TRUE,
+    OP_FALSE,
     OP_NEGATE,
+    OP_NOT,
     OP_CONSTANT_LONG,
+    OP_EQUAL,
+    OP_GREATER,
+    OP_LESS,
     OP_ADD,
     OP_SUBTRACT,
     OP_MULTIPLY,
     OP_DIVIDE,
 } OpCode;
 
-typedef struct {
+typedef struct
+{
     int offset;
     int line;
 } LineStart;
