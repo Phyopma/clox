@@ -7,4 +7,8 @@ cmake -B build -S .
 
 cmake --build build
 
-./build/clox "$1"
+if [ -n "$1" ]; then
+  ./build/clox "$1"
+else
+  ./build/clox
+fi

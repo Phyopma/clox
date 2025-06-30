@@ -9,6 +9,7 @@
 
 static void repl()
 {
+    char *cmd = "exit";
     char line[1024];
     for (;;)
     {
@@ -19,6 +20,8 @@ static void repl()
             printf("\n");
             break;
         }
+        if (memcmp(line, cmd, 4) == 0)
+            break;
         interpret(line);
     }
 }
