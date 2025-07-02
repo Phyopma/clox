@@ -34,6 +34,8 @@ typedef enum
 } Precedence;
 
 typedef void (*ParseFn)();
+static void declaration();
+static void statement();
 typedef struct
 {
     ParseFn prefix;
@@ -341,6 +343,19 @@ static void expression()
     parsePrecedence(PREC_ASSIGNMENT);
 }
 
+static bool check(TokenType type)
+{
+    return parser.current.type == type;
+}
+
+static bool match(TokenType type)
+{
+    if (!check(type))
+        return false;
+    advance();
+    return true;
+}
+
 bool compile(const char *source, Chunk *chunk)
 {
     initScanner(source);
@@ -349,9 +364,31 @@ bool compile(const char *source, Chunk *chunk)
     parser.hadError = false;
     parser.panicMode = false;
     advance();
-    expression();
-    consume(TOKEN_EOF, "Expect end of expression.");
 
+    if (!match(TOKEN_EOF))
+    {
+        declaration();
+    }
     endCompiler();
     return !parser.hadError;
+}
+
+static void declaration()
+{
+    return statement();
+}
+
+static void printStatement()
+{
+    expression();
+    consume(TOKEN_SEMICOLON, "Expect ';' after value.");
+    emitByte(OP_PRINT);
+}
+
+static void statement()
+{
+    if (match(TOKEN_PRINT))
+    {
+        return printStatement();
+    }
 }
