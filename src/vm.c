@@ -34,10 +34,13 @@ static void runtimeError(const char *format, ...)
 void initVM()
 {
     resetStack();
+    vm.objects = NULL;
+    initTable(&vm.strings);
 }
 
 void freeVM()
 {
+    freeTable(&vm.strings);
     freeObjects();
 }
 
@@ -175,10 +178,12 @@ static InterpretResult run()
 
             // TODO: need to implement for OP_CONSTANT_LONG opcode which read 3 bytes 24 bits index from ValueArray
         case OP_EQUAL:
+        {
             Value b = pop();
             Value a = pop();
             push(BOOL_VAL(valuesEqual(a, b)));
             break;
+        }
 
         case OP_GREATER:
             BINARY_OP(BOOL_VAL, >);

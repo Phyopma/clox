@@ -12,7 +12,7 @@
 
 ObjString *copyString(const char *start, int length);
 ObjString *takeString(char *chars, int length);
-ObjString *allocateString(char *chars, int length);
+ObjString *allocateString(char *chars, int length, bool ownChars, uint32_t hash);
 
 typedef enum
 {
@@ -29,6 +29,8 @@ struct ObjString
 {
     Obj obj;
     int length;
+    uint32_t hash;
+    bool ownChars;
     char *chars;
 };
 
