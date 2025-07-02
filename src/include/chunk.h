@@ -21,6 +21,8 @@ typedef enum
     OP_MULTIPLY,
     OP_DIVIDE,
     OP_PRINT,
+    OP_POP,
+    OP_DEFINE_GLOBAL,
 } OpCode;
 
 typedef struct
