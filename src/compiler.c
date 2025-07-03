@@ -33,11 +33,12 @@ typedef enum
     PREC_PRIMARY
 } Precedence;
 
-typedef void (*ParseFn)();
+typedef void (*ParseFn)(bool canAssign);
 static void declaration();
 static void statement();
 
 static uint8_t identifierConstant(Token *token);
+static bool match(TokenType type);
 typedef struct
 {
     ParseFn prefix;
@@ -144,7 +145,7 @@ static void expression();
 static ParseRule *getRule(TokenType type);
 static void parsePrecedence(Precedence precedence);
 
-static void grouping()
+static void grouping(bool canAssign)
 {
     expression();
     consume(TOKEN_RIGHT_PAREN, "Expect ')' after expression.");
@@ -178,29 +179,35 @@ static void emitConstant(Value value)
     }
 }
 
-static void number()
+static void number(bool canAssign)
 {
     double value = strtod(parser.previous.start, NULL);
     emitConstant(NUMBER_VAL(value));
 }
 
-static void string()
+static void string(bool canAssign)
 {
     emitConstant(OBJ_VAL(copyString(parser.previous.start + 1, parser.previous.length - 2)));
 }
 
-static void namedVariable(Token token)
+static void namedVariable(Token token, bool canAssign)
 {
     uint8_t arg = identifierConstant(&token);
-    emitBytes(OP_GET_GLOBAL, arg);
+    if (canAssign && match(TOKEN_EQUAL))
+    {
+        expression();
+        emitBytes(OP_SET_GLOBAL, arg);
+    }
+    else
+        emitBytes(OP_GET_GLOBAL, arg);
 }
 
-static void variable()
+static void variable(bool canAssign)
 {
-    namedVariable(parser.previous);
+    namedVariable(parser.previous, canAssign);
 }
 
-static void unary()
+static void unary(bool canAssign)
 {
     TokenType operatorType = parser.previous.type;
 
@@ -222,7 +229,7 @@ static void unary()
     }
 }
 
-static void binary()
+static void binary(bool canAssign)
 {
     TokenType operatorType = parser.previous.type;
     ParseRule *rule = getRule(operatorType);
@@ -265,7 +272,7 @@ static void binary()
     }
 }
 
-static void literal()
+static void literal(bool canAssign)
 {
     switch (parser.previous.type)
     {
@@ -336,14 +343,17 @@ static void parsePrecedence(Precedence precedence)
         return;
     }
 
-    prefixRule();
+    bool canAssign = precedence <= PREC_ASSIGNMENT;
+    prefixRule(canAssign);
 
     while (precedence <= getRule(parser.current.type)->precedence)
     {
         advance();
         ParseFn infixRule = getRule(parser.previous.type)->infix;
-        infixRule();
+        infixRule(canAssign);
     }
+    if (canAssign && match(TOKEN_EQUAL))
+        error("Invalid assignment target.");
 }
 
 static ParseRule *getRule(TokenType type)
