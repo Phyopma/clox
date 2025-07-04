@@ -53,6 +53,7 @@ typedef struct
 typedef struct
 {
     Token name;
+    bool isConst;
     int depth;
 } Local;
 typedef struct
@@ -248,6 +249,11 @@ static void namedVariable(Token token, bool canAssign)
     }
     if (canAssign && match(TOKEN_EQUAL))
     {
+        if (arg != -1 && current->locals[arg].isConst)
+        {
+            error("Cannot assign to a val variable.");
+            return;
+        }
         expression();
         emitBytes(setOp, (uint8_t)arg);
     }
@@ -480,7 +486,7 @@ static uint8_t identifierConstant(Token *token)
     return makeConstant(OBJ_VAL(copyString(token->start, token->length)));
 }
 
-static void addLocal(Token name)
+static void addLocal(Token name, bool isConst)
 {
     if (current->localCount == UINT8_COUNT)
     {
@@ -488,6 +494,7 @@ static void addLocal(Token name)
         return;
     }
     Local *local = &current->locals[current->localCount++];
+    local->isConst = isConst;
     local->depth = -1;
     local->name = name;
 }
@@ -499,7 +506,7 @@ static bool identifersEqual(Token *a, Token *b)
     return memcmp(a->start, b->start, a->length) == 0;
 }
 
-static void declareVariable()
+static void declareVariable(bool isConst)
 {
     if (current->scopeDepth == 0)
         return;
@@ -515,13 +522,13 @@ static void declareVariable()
         }
     }
 
-    addLocal(*name);
+    addLocal(*name, isConst);
 }
 
-static uint8_t parseVariable(const char *message)
+static uint8_t parseVariable(const char *message, bool isConst)
 {
     consume(TOKEN_IDENTIFIER, message);
-    declareVariable();
+    declareVariable(isConst);
     if (current->scopeDepth > 0)
         return 0;
     return identifierConstant(&parser.previous);
@@ -544,7 +551,8 @@ static void defineVariable(uint8_t global)
 
 static void varDeclaration()
 {
-    uint8_t global = parseVariable("Expect variable name.");
+    bool isConst = parser.previous.type == TOKEN_VAL;
+    uint8_t global = parseVariable("Expect variable name.", isConst);
     if (match(TOKEN_EQUAL))
     {
         expression();
@@ -559,7 +567,7 @@ static void varDeclaration()
 
 static void declaration()
 {
-    if (match(TOKEN_VAR))
+    if (match(TOKEN_VAR) || match(TOKEN_VAL))
     {
         varDeclaration();
     }

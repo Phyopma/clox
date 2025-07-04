@@ -1,6 +1,6 @@
 {
-  var a = "outer";
-  {
-    var a = "inner";
-  }
+val a = "asdfsaf";
+var b = "asd";
+b = "123";
+b = 123;
 }

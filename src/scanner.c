@@ -207,7 +207,12 @@ static TokenType identifierType()
         }
         break;
     case 'v':
-        return checkKeyword(1, 2, "ar", TOKEN_VAR);
+    {
+        TokenType type = checkKeyword(1, 2, "ar", TOKEN_VAR);
+        if (type != TOKEN_IDENTIFIER)
+            return type;
+        return checkKeyword(1, 2, "al", TOKEN_VAL);
+    }
     case 'w':
         return checkKeyword(1, 4, "hile", TOKEN_WHILE);
     }
