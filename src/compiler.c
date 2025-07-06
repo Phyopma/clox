@@ -48,12 +48,21 @@ static void patchJump(int offset);
 static void ifStatement();
 static void whileStatement();
 static void forStatement();
+static void continueStatement();
 typedef struct
 {
     ParseFn prefix;
     ParseFn infix;
     Precedence precedence;
 } ParseRule;
+
+typedef struct Loop Loop;
+struct Loop
+{
+    Loop *enclosing;
+    int loopStart;
+    int scopeDepth;
+};
 
 typedef struct
 {
@@ -64,6 +73,7 @@ typedef struct
 typedef struct
 {
     Local locals[UINT8_COUNT];
+    Loop *loop;
     int localCount;
     int scopeDepth;
 } Compiler;
@@ -206,6 +216,7 @@ static void initCompiler(Compiler *compiler)
 {
     compiler->localCount = 0;
     compiler->scopeDepth = 0;
+    compiler->loop = NULL;
     current = compiler;
 }
 
@@ -635,6 +646,7 @@ static void beginScope()
 {
     current->scopeDepth++;
 }
+
 static void endScope()
 {
     current->scopeDepth--;
@@ -663,6 +675,8 @@ static void statement()
     {
         forStatement();
     }
+    else if (match(TOKEN_CONTINUE))
+        continueStatement();
     else if (match(TOKEN_LEFT_BRACE))
     {
         beginScope();
@@ -732,7 +746,14 @@ static void emitLoop(int loopStart)
 
 static void whileStatement()
 {
-    int loopStart = currentChunk()->count;
+    // int loopStart = currentChunk()->count;
+    Loop loop;
+    loop.enclosing = current->loop;
+    current->loop = &loop;
+
+    loop.loopStart = currentChunk()->count;
+    loop.scopeDepth = current->scopeDepth;
+    // revise this in case
 
     consume(TOKEN_LEFT_PAREN, "Expect '(' after while.)");
     expression();
@@ -742,10 +763,12 @@ static void whileStatement()
     emitByte(OP_POP);
 
     statement();
-    emitLoop(loopStart);
+    emitLoop(loop.loopStart); // changed here
 
     patchJump(exitJump);
     emitByte(OP_POP);
+
+    current->loop = loop.enclosing;
 }
 
 static void forStatement()
@@ -792,6 +815,13 @@ static void forStatement()
         patchJump(bodyJump);
     }
 
+    Loop loop;
+    loop.enclosing = current->loop;
+    current->loop = &loop;
+
+    loop.loopStart = loopStart;
+    loop.scopeDepth = current->scopeDepth;
+
     statement();         // while body
     emitLoop(loopStart); // end of while,
     // will direct back to increment clause begining if exist,
@@ -803,5 +833,25 @@ static void forStatement()
         patchJump(exitJump);
         emitByte(OP_POP); // Condition
     }
+    current->loop = loop.enclosing;
     endScope();
+}
+
+static void continueStatement()
+{
+    if (current->loop == NULL)
+    {
+        error("Can't use 'continue' outside of a loop.");
+        return;
+    }
+
+    consume(TOKEN_SEMICOLON, "Expect ';' after 'continue'.");
+
+    // poping locals created inside the loop
+    for (int i = current->localCount - 1; i >= 0 && current->locals[i].depth > current->loop->scopeDepth; i--)
+    {
+        emitByte(OP_POP);
+    }
+
+    emitLoop(current->loop->loopStart);
 }
