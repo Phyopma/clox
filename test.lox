@@ -1,6 +1,5 @@
-{
-val a = "asdfsaf";
-var b = "asd";
-b = "123";
-b = 123;
-}
+if (2 < 4 or True) {
+    print "2";
+} else {
+    print "1";
+} 
