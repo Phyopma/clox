@@ -1,0 +1,173 @@
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/phyopyae/Desktop/code-craft-projects.tmp/clox/build
+[100%] Built target clox
+== code ==
+0000    1 OP_CONSTANT         2 '0'
+0002    | OP_DEFINE_GLOBAL    0 'i'
+0004    2 OP_GET_GLOBAL       3 'i'
+0006    | OP_CONSTANT         5 '10'
+0008    | OP_LESS
+0009    | OP_JUMP_IF_FALSE    9 -> 27
+0012    | OP_POP
+0013    3 OP_GET_GLOBAL       6 'i'
+0015    | OP_PRINT
+0016    4 OP_GET_GLOBAL       8 'i'
+0018    | OP_CONSTANT        10 '2'
+0020    | OP_ADD
+0021    | OP_SET_GLOBAL       7 'i'
+0023    | OP_POP
+0024    5 OP_LOOP            24 -> 4
+0027    | OP_POP
+0028    | OP_RETURN
+Runtime Tracing in vm:     
+0000    1 OP_CONSTANT         2 '0'
+    [ 0 ]
+0002    | OP_DEFINE_GLOBAL    0 'i'
+    
+0004    2 OP_GET_GLOBAL       3 'i'
+    [ 0 ]
+0006    | OP_CONSTANT         5 '10'
+    [ 0 ][ 10 ]
+0008    | OP_LESS
+    [ true ]
+0009    | OP_JUMP_IF_FALSE    9 -> 27
+    [ true ]
+0012    | OP_POP
+    
+0013    3 OP_GET_GLOBAL       6 'i'
+    [ 0 ]
+0015    | OP_PRINT
+0
+    
+0016    4 OP_GET_GLOBAL       8 'i'
+    [ 0 ]
+0018    | OP_CONSTANT        10 '2'
+    [ 0 ][ 2 ]
+0020    | OP_ADD
+    [ 2 ]
+0021    | OP_SET_GLOBAL       7 'i'
+    [ 2 ]
+0023    | OP_POP
+    
+0024    5 OP_LOOP            24 -> 4
+    
+0004    2 OP_GET_GLOBAL       3 'i'
+    [ 2 ]
+0006    | OP_CONSTANT         5 '10'
+    [ 2 ][ 10 ]
+0008    | OP_LESS
+    [ true ]
+0009    | OP_JUMP_IF_FALSE    9 -> 27
+    [ true ]
+0012    | OP_POP
+    
+0013    3 OP_GET_GLOBAL       6 'i'
+    [ 2 ]
+0015    | OP_PRINT
+2
+    
+0016    4 OP_GET_GLOBAL       8 'i'
+    [ 2 ]
+0018    | OP_CONSTANT        10 '2'
+    [ 2 ][ 2 ]
+0020    | OP_ADD
+    [ 4 ]
+0021    | OP_SET_GLOBAL       7 'i'
+    [ 4 ]
+0023    | OP_POP
+    
+0024    5 OP_LOOP            24 -> 4
+    
+0004    2 OP_GET_GLOBAL       3 'i'
+    [ 4 ]
+0006    | OP_CONSTANT         5 '10'
+    [ 4 ][ 10 ]
+0008    | OP_LESS
+    [ true ]
+0009    | OP_JUMP_IF_FALSE    9 -> 27
+    [ true ]
+0012    | OP_POP
+    
+0013    3 OP_GET_GLOBAL       6 'i'
+    [ 4 ]
+0015    | OP_PRINT
+4
+    
+0016    4 OP_GET_GLOBAL       8 'i'
+    [ 4 ]
+0018    | OP_CONSTANT        10 '2'
+    [ 4 ][ 2 ]
+0020    | OP_ADD
+    [ 6 ]
+0021    | OP_SET_GLOBAL       7 'i'
+    [ 6 ]
+0023    | OP_POP
+    
+0024    5 OP_LOOP            24 -> 4
+    
+0004    2 OP_GET_GLOBAL       3 'i'
+    [ 6 ]
+0006    | OP_CONSTANT         5 '10'
+    [ 6 ][ 10 ]
+0008    | OP_LESS
+    [ true ]
+0009    | OP_JUMP_IF_FALSE    9 -> 27
+    [ true ]
+0012    | OP_POP
+    
+0013    3 OP_GET_GLOBAL       6 'i'
+    [ 6 ]
+0015    | OP_PRINT
+6
+    
+0016    4 OP_GET_GLOBAL       8 'i'
+    [ 6 ]
+0018    | OP_CONSTANT        10 '2'
+    [ 6 ][ 2 ]
+0020    | OP_ADD
+    [ 8 ]
+0021    | OP_SET_GLOBAL       7 'i'
+    [ 8 ]
+0023    | OP_POP
+    
+0024    5 OP_LOOP            24 -> 4
+    
+0004    2 OP_GET_GLOBAL       3 'i'
+    [ 8 ]
+0006    | OP_CONSTANT         5 '10'
+    [ 8 ][ 10 ]
+0008    | OP_LESS
+    [ true ]
+0009    | OP_JUMP_IF_FALSE    9 -> 27
+    [ true ]
+0012    | OP_POP
+    
+0013    3 OP_GET_GLOBAL       6 'i'
+    [ 8 ]
+0015    | OP_PRINT
+8
+    
+0016    4 OP_GET_GLOBAL       8 'i'
+    [ 8 ]
+0018    | OP_CONSTANT        10 '2'
+    [ 8 ][ 2 ]
+0020    | OP_ADD
+    [ 10 ]
+0021    | OP_SET_GLOBAL       7 'i'
+    [ 10 ]
+0023    | OP_POP
+    
+0024    5 OP_LOOP            24 -> 4
+    
+0004    2 OP_GET_GLOBAL       3 'i'
+    [ 10 ]
+0006    | OP_CONSTANT         5 '10'
+    [ 10 ][ 10 ]
+0008    | OP_LESS
+    [ false ]
+0009    | OP_JUMP_IF_FALSE    9 -> 27
+    [ false ]
+0027    | OP_POP
+    
+0028    | OP_RETURN

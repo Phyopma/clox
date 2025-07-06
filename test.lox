@@ -1,5 +1,5 @@
-if (2 < 4 or True) {
-    print "2";
-} else {
-    print "1";
-} 
+var i = 0;
+for (; i < 10;) {
+    print i;
+    i = i + 2;
+}
