@@ -872,9 +872,10 @@ static int caseStatement()
     expression();
     consume(TOKEN_COLON, "Expect ':' after expression in case statement.");
     int nextCase = emitJump(OP_CASE);
-    while (!check(TOKEN_CASE) && !check(TOKEN_DEFAULT) && !check(TOKEN_RIGHT_BRACE))
+    statement();
+    if (!check(TOKEN_CASE) && !check(TOKEN_DEFAULT) && !check(TOKEN_RIGHT_BRACE))
     {
-        statement();
+        errorAtCurrent("Expect block. use '{' and '}' for block statement.");
     }
     int endJump = emitJump(OP_JUMP);
     patchJump(nextCase);
@@ -890,7 +891,7 @@ static void switchStatement()
 
     int caseJumps[UINT8_COUNT];
     int caseCount = 0;
-    int defaultCase = -1;
+    bool defaultCase = false;
 
     while (!check(TOKEN_RIGHT_BRACE) && !check(TOKEN_EOF))
     {
@@ -907,15 +908,16 @@ static void switchStatement()
         }
         else if (match(TOKEN_DEFAULT))
         {
-            if (defaultCase != -1)
+            if (defaultCase)
             {
                 error("Can't have more than one default case.");
             }
             consume(TOKEN_COLON, "Expect ':' after default.");
-            defaultCase++;
-            while (!check(TOKEN_CASE) && !check(TOKEN_DEFAULT) && !check(TOKEN_RIGHT_BRACE))
+            defaultCase = true;
+            statement();
+            if (!check(TOKEN_CASE) && !check(TOKEN_DEFAULT) && !check(TOKEN_RIGHT_BRACE))
             {
-                statement();
+                errorAtCurrent("Expect block. use '{' and '}' for block statement.");
             }
         }
         else
