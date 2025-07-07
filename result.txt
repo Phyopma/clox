@@ -3,123 +3,26 @@
 -- Build files have been written to: /Users/phyopyae/Desktop/code-craft-projects.tmp/clox/build
 [100%] Built target clox
 == code ==
-0000    1 OP_CONSTANT         1 '0'
-0002    | OP_GET_LOCAL        0
-0004    | OP_CONSTANT         3 '2'
-0006    | OP_LESS
-0007    | OP_JUMP_IF_FALSE    7 -> 47
-0010    | OP_POP
-0011    | OP_JUMP            11 -> 25
-0014    | OP_GET_LOCAL        0
-0016    | OP_CONSTANT         5 '1'
-0018    | OP_ADD
-0019    | OP_SET_LOCAL        0
-0021    | OP_POP
-0022    | OP_LOOP            22 -> 2
-0025    2 OP_GET_LOCAL        0
-0027    | OP_CONSTANT         7 '1'
-0029    | OP_EQUAL
-0030    | OP_JUMP_IF_FALSE   30 -> 40
-0033    | OP_POP
-0034    3 OP_LOOP            34 -> 14
-0037    | OP_JUMP            37 -> 41
-0040    | OP_POP
-0041    4 OP_GET_LOCAL        0
-0043    | OP_PRINT
-0044    5 OP_LOOP            44 -> 14
-0047    | OP_POP
-0048    | OP_POP
-0049    | OP_RETURN
+0000    1 OP_CONSTANT         1 '1'
+0002    2 OP_CONSTANT         3 'first'
+0004    | OP_PRINT
+0005    3 OP_CONSTANT         5 'second'
+0007    | OP_PRINT
+0008    4 OP_POP
+0009    | OP_RETURN
 Runtime Tracing in vm:     
-0000    1 OP_CONSTANT         1 '0'
-    [ 0 ]
-0002    | OP_GET_LOCAL        0
-    [ 0 ][ 0 ]
-0004    | OP_CONSTANT         3 '2'
-    [ 0 ][ 0 ][ 2 ]
-0006    | OP_LESS
-    [ 0 ][ true ]
-0007    | OP_JUMP_IF_FALSE    7 -> 47
-    [ 0 ][ true ]
-0010    | OP_POP
-    [ 0 ]
-0011    | OP_JUMP            11 -> 25
-    [ 0 ]
-0025    2 OP_GET_LOCAL        0
-    [ 0 ][ 0 ]
-0027    | OP_CONSTANT         7 '1'
-    [ 0 ][ 0 ][ 1 ]
-0029    | OP_EQUAL
-    [ 0 ][ false ]
-0030    | OP_JUMP_IF_FALSE   30 -> 40
-    [ 0 ][ false ]
-0040    | OP_POP
-    [ 0 ]
-0041    4 OP_GET_LOCAL        0
-    [ 0 ][ 0 ]
-0043    | OP_PRINT
-0
-    [ 0 ]
-0044    5 OP_LOOP            44 -> 14
-    [ 0 ]
-0014    | OP_GET_LOCAL        0
-    [ 0 ][ 0 ]
-0016    | OP_CONSTANT         5 '1'
-    [ 0 ][ 0 ][ 1 ]
-0018    | OP_ADD
-    [ 0 ][ 1 ]
-0019    | OP_SET_LOCAL        0
-    [ 1 ][ 1 ]
-0021    | OP_POP
+0000    1 OP_CONSTANT         1 '1'
     [ 1 ]
-0022    | OP_LOOP            22 -> 2
+0002    2 OP_CONSTANT         3 'first'
+    [ 1 ][ first ]
+0004    | OP_PRINT
+first
     [ 1 ]
-0002    | OP_GET_LOCAL        0
-    [ 1 ][ 1 ]
-0004    | OP_CONSTANT         3 '2'
-    [ 1 ][ 1 ][ 2 ]
-0006    | OP_LESS
-    [ 1 ][ true ]
-0007    | OP_JUMP_IF_FALSE    7 -> 47
-    [ 1 ][ true ]
-0010    | OP_POP
+0005    3 OP_CONSTANT         5 'second'
+    [ 1 ][ second ]
+0007    | OP_PRINT
+second
     [ 1 ]
-0011    | OP_JUMP            11 -> 25
-    [ 1 ]
-0025    2 OP_GET_LOCAL        0
-    [ 1 ][ 1 ]
-0027    | OP_CONSTANT         7 '1'
-    [ 1 ][ 1 ][ 1 ]
-0029    | OP_EQUAL
-    [ 1 ][ true ]
-0030    | OP_JUMP_IF_FALSE   30 -> 40
-    [ 1 ][ true ]
-0033    | OP_POP
-    [ 1 ]
-0034    3 OP_LOOP            34 -> 14
-    [ 1 ]
-0014    | OP_GET_LOCAL        0
-    [ 1 ][ 1 ]
-0016    | OP_CONSTANT         5 '1'
-    [ 1 ][ 1 ][ 1 ]
-0018    | OP_ADD
-    [ 1 ][ 2 ]
-0019    | OP_SET_LOCAL        0
-    [ 2 ][ 2 ]
-0021    | OP_POP
-    [ 2 ]
-0022    | OP_LOOP            22 -> 2
-    [ 2 ]
-0002    | OP_GET_LOCAL        0
-    [ 2 ][ 2 ]
-0004    | OP_CONSTANT         3 '2'
-    [ 2 ][ 2 ][ 2 ]
-0006    | OP_LESS
-    [ 2 ][ false ]
-0007    | OP_JUMP_IF_FALSE    7 -> 47
-    [ 2 ][ false ]
-0047    | OP_POP
-    [ 2 ]
-0048    | OP_POP
+0008    4 OP_POP
     
-0049    | OP_RETURN
+0009    | OP_RETURN

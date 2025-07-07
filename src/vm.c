@@ -259,9 +259,22 @@ static InterpretResult run()
             break;
         }
         case OP_LOOP:
+        {
             uint16_t offset = READ_SHORT();
             vm.ip -= offset;
             break;
+        }
+        case OP_CASE:
+        {
+            uint16_t offset = READ_SHORT();
+            Value b = pop();
+            Value a = peek(0);
+            if (!valuesEqual(a, b))
+                vm.ip += offset;
+            else
+                pop();
+            break;
+        }
         case OP_RETURN:
             return INTERPRET_OK;
         }

@@ -49,6 +49,7 @@ static void ifStatement();
 static void whileStatement();
 static void forStatement();
 static void continueStatement();
+static void switchStatement();
 typedef struct
 {
     ParseFn prefix;
@@ -90,7 +91,9 @@ static Chunk *currentChunk()
 static void errorAt(Token *token, const char *message)
 {
     if (parser.panicMode)
+    {
         return;
+    }
 
     parser.panicMode = true;
     fprintf(stderr, "[line %d] Error", token->line);
@@ -513,6 +516,8 @@ static void synchronize()
         case TOKEN_WHILE:
         case TOKEN_PRINT:
         case TOKEN_RETURN:
+        case TOKEN_CASE:
+        case TOKEN_DEFAULT:
             return;
         default:;
         }
@@ -676,7 +681,13 @@ static void statement()
         forStatement();
     }
     else if (match(TOKEN_CONTINUE))
+    {
         continueStatement();
+    }
+    else if (match(TOKEN_SWITCH))
+    {
+        switchStatement();
+    }
     else if (match(TOKEN_LEFT_BRACE))
     {
         beginScope();
@@ -854,4 +865,74 @@ static void continueStatement()
     }
 
     emitLoop(current->loop->loopStart);
+}
+
+static int caseStatement()
+{
+    expression();
+    consume(TOKEN_COLON, "Expect ':' after expression in case statement.");
+    int nextCase = emitJump(OP_CASE);
+    while (!check(TOKEN_CASE) && !check(TOKEN_DEFAULT) && !check(TOKEN_RIGHT_BRACE))
+    {
+        statement();
+    }
+    int endJump = emitJump(OP_JUMP);
+    patchJump(nextCase);
+    return endJump;
+}
+
+static void switchStatement()
+{
+    consume(TOKEN_LEFT_PAREN, "Expect '(' after switch.");
+    expression();
+    consume(TOKEN_RIGHT_PAREN, "Expect ')' after expression in switch.");
+    consume(TOKEN_LEFT_BRACE, "Expect '{' before switch cases.");
+
+    int caseJumps[UINT8_COUNT];
+    int caseCount = 0;
+    int defaultCase = -1;
+
+    while (!check(TOKEN_RIGHT_BRACE) && !check(TOKEN_EOF))
+    {
+        if (match(TOKEN_CASE))
+        {
+            if (caseCount < UINT8_COUNT)
+            {
+                caseJumps[caseCount++] = caseStatement();
+            }
+            else
+            {
+                error("Too many switch cases. Ignoring extra cases.");
+            }
+        }
+        else if (match(TOKEN_DEFAULT))
+        {
+            if (defaultCase != -1)
+            {
+                error("Can't have more than one default case.");
+            }
+            consume(TOKEN_COLON, "Expect ':' after default.");
+            defaultCase++;
+            while (!check(TOKEN_CASE) && !check(TOKEN_DEFAULT) && !check(TOKEN_RIGHT_BRACE))
+            {
+                statement();
+            }
+        }
+        else
+        {
+            errorAtCurrent("Expect 'case' or 'default' in switch statement.");
+            while (!check(TOKEN_RIGHT_BRACE) && !check(TOKEN_EOF) &&
+                   !check(TOKEN_CASE) && !check(TOKEN_DEFAULT))
+            {
+                advance();
+            }
+        }
+    }
+    consume(TOKEN_RIGHT_BRACE, "Expect '}' after switch cases.");
+    emitByte(OP_POP);
+
+    for (int i = 0; i < caseCount; i++)
+    {
+        patchJump(caseJumps[i]);
+    }
 }

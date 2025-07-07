@@ -28,6 +28,11 @@ typedef enum
   TOKEN_IDENTIFIER,
   TOKEN_STRING,
   TOKEN_NUMBER,
+  // switch
+  TOKEN_SWITCH,
+  TOKEN_CASE,
+  TOKEN_DEFAULT,
+  TOKEN_COLON,
   // Keywords.
   TOKEN_AND,
   TOKEN_CLASS,
@@ -48,7 +53,7 @@ typedef enum
   TOKEN_WHILE,
   TOKEN_CONTINUE,
   TOKEN_ERROR,
-  TOKEN_EOF
+  TOKEN_EOF,
 } TokenType;
 
 typedef struct

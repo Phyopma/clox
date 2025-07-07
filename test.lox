@@ -1,4 +1,4 @@
-for (var i = 0; i < 2; i = i + 1) {
-  if (i == 1)
-  continue
+switch (1) {
+  var a = 12; 
+  case 1: print "one";
 }
