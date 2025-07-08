@@ -4,11 +4,12 @@ set -e
 mkdir -p build
 
 cmake -B build -S .
-
 cmake --build build
 
+EXECUTABLE=${2:-clox}
+
 if [ -n "$1" ]; then
-  ./build/clox "$1"
+  ./build/$EXECUTABLE "$1"
 else
-  ./build/clox
+  ./build/$EXECUTABLE
 fi
