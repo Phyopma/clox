@@ -53,6 +53,7 @@ static void continueStatement();
 static void switchStatement();
 static void returnStatement();
 static bool check(TokenType type);
+
 typedef struct
 {
     ParseFn prefix;

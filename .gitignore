@@ -3,3 +3,4 @@ build
 CMake*
 cmake_install.cmake
 Makefile
+benchmark.sh
