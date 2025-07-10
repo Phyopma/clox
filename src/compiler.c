@@ -51,8 +51,8 @@ static void whileStatement();
 static void forStatement();
 static void continueStatement();
 static void switchStatement();
-static void returnStatement();
 static bool check(TokenType type);
+static void returnStatement();
 typedef struct
 {
     ParseFn prefix;
