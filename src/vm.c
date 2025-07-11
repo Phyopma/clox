@@ -37,7 +37,8 @@ static void runtimeError(const char *format, ...)
 	{
 		CallFrame *frame = &vm.frames[i];
 		ObjFunction *function = frame->function;
-		size_t instruction = frame->ip - function->chunk.code - 1;
+		size_t instruction = frame->ip - function->chunk.code; // after adding register ip, we sync frame->ip at every iteration which is pointing current error causing instruction
+		// size_t instruction = frame->ip - function->chunk.code - 1;
 		int line = getLine(&function->chunk, instruction);
 		fprintf(stderr, "[line %d] in ", line);
 		if (function->name == NULL)
@@ -199,6 +200,7 @@ static InterpretResult run()
 
 	for (;;)
 	{
+		frame->ip = ip;
 
 #ifdef DEBUG_TRACE_EXECUTION
 		printf("    ");
