@@ -11,9 +11,10 @@
 #define STACK_MAX (FRAMES_MAX * UINT8_COUNT)
 
 typedef struct ObjFunction ObjFunction;
+typedef struct ObjClosure ObjClosure;
 typedef struct
 {
-    ObjFunction *function;
+    ObjClosure *closure;
     uint8_t *ip;
     Value *slots;
 } CallFrame;
@@ -26,6 +27,7 @@ typedef struct
     uint8_t *ip;
     Value stack[STACK_MAX];
     Value *stackTop;
+    struct ObjUpvalue *openUpvalues;
     Obj *objects;
     Table globals;
     Table strings;
@@ -42,6 +44,7 @@ extern VM vm;
 
 void initVM();
 void freeVM();
+static InterpretResult run();
 InterpretResult interpret(const char *source);
 void push(Value value);
 Value pop();
