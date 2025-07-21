@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "object.h"
@@ -13,7 +14,13 @@ Obj *allocateObj(size_t size, ObjType type)
 {
     Obj *obj = (Obj *)reallocate(NULL, 0, size);
     obj->type = type;
-    vm.objects = obj;
+    obj->isMarked = false;
+
+    obj->next = vm.objects;
+    // vm.objects = obj;
+#ifdef DEBUG_LOG_GC
+    printf("%p allocate %zu for %d\n", (void *)obj, size, type);
+#endif
     return obj;
 }
 
@@ -24,7 +31,11 @@ ObjString *allocateString(char *chars, int length, bool ownChars, uint32_t hash)
     string->length = length;
     string->hash = hash;
     string->ownChars = ownChars;
+    // if (ownChars)
+    push(OBJ_VAL(string));
     tableSet(&vm.strings, string, NIL_VAL);
+    // if (ownChars)
+    pop();
 
     return string;
 }

@@ -1,11 +1,12 @@
-fun outer() {
-  var x = "outside";
-  fun inner() {
-    print x;
-  }
+fun makeClosure() {
+  var a = "data";
 
-  return inner;
+  fun f() { print a; }
+  return f;
 }
 
-var closure = outer();
-closure();
+{
+  var closure = makeClosure();
+  // GC here.
+  closure();
+}

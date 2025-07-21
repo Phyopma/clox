@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "common.h"
+#include "memory.h"
 #include "compiler.h"
 #include "object.h"
 #include "scanner.h"
@@ -11,7 +12,7 @@
 #include "debug.h"
 #endif
 
-#define UINT8_COUNT (UINT8_MAX + 1)
+#define UINT8 (UINT8_MAX + 1)
 
 typedef struct
 {
@@ -53,6 +54,7 @@ static void continueStatement();
 static void switchStatement();
 static bool check(TokenType type);
 static void returnStatement();
+
 typedef struct
 {
     ParseFn prefix;
@@ -607,6 +609,16 @@ ObjFunction *compile(const char *source)
     }
     ObjFunction *function = endCompiler();
     return parser.hadError ? NULL : function;
+}
+
+void markCompilerRoots()
+{
+    Compiler *compiler = current;
+    while (compiler != NULL)
+    {
+        markObject((Obj *)compiler->function);
+        compiler = compiler->enclosing;
+    }
 }
 
 static void synchronize()
