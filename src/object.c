@@ -17,7 +17,7 @@ Obj *allocateObj(size_t size, ObjType type)
     obj->isMarked = false;
 
     obj->next = vm.objects;
-    // vm.objects = obj;
+    vm.objects = obj;
 #ifdef DEBUG_LOG_GC
     printf("%p allocate %zu for %d\n", (void *)obj, size, type);
 #endif
@@ -135,10 +135,30 @@ ObjClosure *newClosure(ObjFunction *function)
     return closure;
 }
 
+ObjClass *newClass(ObjString *name)
+{
+    ObjClass *klass = ALLOCATE_OBJ(ObjClass, OBJ_CLASS);
+    klass->name = name;
+    return klass;
+}
+
+ObjInstance *newInstance(ObjClass *klass)
+{
+    ObjInstance *instance = ALLOCATE_OBJ(ObjInstance, OBJ_INSTANCE);
+    instance->klass = klass;
+    initTable(&instance->fields);
+    return instance;
+}
+
 void printObject(Value value)
 {
     switch (OBJ_TYPE(value))
     {
+    case OBJ_CLASS:
+    {
+        printf("%s", AS_CLASS(value)->name->chars);
+        break;
+    }
     case OBJ_STRING:
         printf("%s", AS_CSTRING(value));
         break;
@@ -153,6 +173,9 @@ void printObject(Value value)
         break;
     case OBJ_UPVALUE:
         printf("upvalue");
+        break;
+    case OBJ_INSTANCE:
+        printf("%s instance", AS_INSTANCE(value)->klass->name->chars);
         break;
     default:
         break;

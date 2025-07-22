@@ -1,12 +1,6 @@
-fun makeClosure() {
-  var a = "data";
+class Brioche {}
+var b = Brioche();
 
-  fun f() { print a; }
-  return f;
-}
-
-{
-  var closure = makeClosure();
-  // GC here.
-  closure();
-}
+b.gg = 1;
+b.gf = 2;
+print b.gg+b.gf;

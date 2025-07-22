@@ -38,8 +38,8 @@ static void runtimeError(const char *format, ...)
 	{
 		CallFrame *frame = &vm.frames[i];
 		ObjFunction *function = frame->closure->function;
-		size_t instruction = frame->ip - function->chunk.code; // after adding register ip, we sync frame->ip at every iteration which is pointing current error causing instruction
-		// size_t instruction = frame->ip - function->chunk.code - 1;
+		size_t instruction = frame->ip - function->chunk.code;
+		// after adding register ip, we sync frame->ip at every iteration which is pointing current error causing instruction , size_t instruction = frame->ip - function->chunk.cod e - 1;
 		int line = getLine(&function->chunk, instruction);
 		fprintf(stderr, "[line %d] in ", line);
 		if (function->name == NULL)
@@ -151,6 +151,12 @@ static bool callValue(Value callee, int argCount)
 			}
 			vm.stackTop -= argCount - 1;
 			push(result);
+			return true;
+		}
+		case OBJ_CLASS:
+		{
+			ObjClass *klass = AS_CLASS(callee);
+			vm.stackTop[-argCount - 1] = OBJ_VAL(newInstance(klass));
 			return true;
 		}
 		default:
@@ -469,6 +475,44 @@ static InterpretResult run()
 					closure->upvalues[i] = frame->closure->upvalues[index];
 				}
 			}
+			break;
+		}
+		case OP_CLASS:
+		{
+			push(OBJ_VAL(newClass(READ_STRING())));
+			break;
+		}
+		case OP_GET_PROPERTY:
+		{
+			if (!IS_INSTANCE(peek(0)))
+			{
+				runtimeError("Only instances have properties.");
+				return INTERPRET_RUNTIME_ERROR;
+			}
+			ObjInstance *instance = AS_INSTANCE(peek(0));
+			ObjString *name = READ_STRING();
+			Value value;
+			if (tableGet(&instance->fields, name, &value))
+			{
+				pop(); // instance
+				push(value);
+				break;
+			}
+			runtimeError("Undefined property '%s'.", name->chars);
+			return INTERPRET_RUNTIME_ERROR;
+		}
+		case OP_SET_PROPERTY:
+		{
+			if (!IS_INSTANCE(peek(1)))
+			{
+				runtimeError("Only instances have fields.");
+				return INTERPRET_RUNTIME_ERROR;
+			}
+			ObjInstance *instance = AS_INSTANCE(peek(1));
+			tableSet(&instance->fields, READ_STRING(), peek(0));
+			Value value = pop();
+			pop(); // instance
+			push(value);
 			break;
 		}
 		case OP_RETURN:
