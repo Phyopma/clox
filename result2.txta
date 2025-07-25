@@ -1,0 +1,153 @@
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/phyopyae/Desktop/code-craft-projects.tmp/clox/build
+[  9%] Building C object CMakeFiles/clox.dir/src/compiler.c.o
+[ 18%] Linking C executable clox
+[100%] Built target clox
+0x100b49ca0 allocate 48 for 0
+0x100b49be0 allocate 48 for 0
+0x100b49c10 allocate 40 for 2
+0x100b4aef0 allocate 88 for 1
+0x100b4af50 allocate 48 for 0
+0x100b4b040 allocate 88 for 1
+0x100b4b100 allocate 48 for 0
+== init ==
+0000    3 OP_GET_LOCAL        0
+0002    | OP_GET_LOCAL        1
+0004    | OP_SET_PROPERY      0 'coffee'
+0006    | OP_POP
+0007    4 OP_GET_LOCAL        0
+0009    | OP_RETURN
+0x100b4b1c0 allocate 48 for 0
+0x100b4b1f0 allocate 88 for 1
+0x100b4b270 allocate 48 for 0
+== brew ==
+0000    7 OP_CONSTANT         1 'Enjoy your cup of '
+0002    | OP_GET_LOCAL        0
+0004    | OP_GET_PROPERTY     2 'coffee'
+0006    | OP_ADD
+0007    | OP_PRINT
+0008   10 OP_GET_LOCAL        0
+0010    | OP_NIL
+0011    | OP_SET_PROPERY      3 'coffee'
+0013    | OP_POP
+0014   11 OP_NIL
+0015    | OP_RETURN
+0x100b4b380 allocate 48 for 0
+0x100b49b60 allocate 48 for 0
+== <script> ==
+0000    1 OP_CLASS            0 'CoffeeMaker'
+0002    | OP_DEFINE_GLOBAL    0 'CoffeeMaker'
+0004    | OP_GET_GLOBAL       1 'CoffeeMaker'
+0006    4 OP_CLOSURE          3 <fn init>
+0008    | OP_METHOD           2 'init'
+0010   11 OP_CLOSURE          5 <fn brew>
+0012    | OP_METHOD           4 'brew'
+0014   12 OP_POP
+0015   14 OP_GET_GLOBAL       7 'CoffeeMaker'
+0017    | OP_CONSTANT         9 'coffee and chicory'
+0019    | OP_CALL             1
+0021    | OP_DEFINE_GLOBAL    6 'maker'
+0023   15 OP_GET_GLOBAL      10 'maker'
+0025    | OP_GET_PROPERTY    11 'brew'
+0027    | OP_CALL             0
+0029    | OP_POP
+0030    | OP_NIL
+0031    | OP_RETURN
+0x100b49b90 allocate 48 for 3
+Runtime Tracing in vm:     [ <script> ]
+0000    1 OP_CLASS            0 'CoffeeMaker'
+0x100b4af80 allocate 48 for 5
+    [ <script> ][ CoffeeMaker ]
+0002    | OP_DEFINE_GLOBAL    0 'CoffeeMaker'
+    [ <script> ]
+0004    | OP_GET_GLOBAL       1 'CoffeeMaker'
+    [ <script> ][ CoffeeMaker ]
+0006    4 OP_CLOSURE          3 <fn init>
+0x100b4afb0 allocate 48 for 3
+    [ <script> ][ CoffeeMaker ][ <fn init> ]
+0008    | OP_METHOD           2 'init'
+    [ <script> ][ CoffeeMaker ]
+0010   11 OP_CLOSURE          5 <fn brew>
+0x100b4b6f0 allocate 48 for 3
+    [ <script> ][ CoffeeMaker ][ <fn brew> ]
+0012    | OP_METHOD           4 'brew'
+    [ <script> ][ CoffeeMaker ]
+0014   12 OP_POP
+    [ <script> ]
+0015   14 OP_GET_GLOBAL       7 'CoffeeMaker'
+    [ <script> ][ CoffeeMaker ]
+0017    | OP_CONSTANT         9 'coffee and chicory'
+    [ <script> ][ CoffeeMaker ][ coffee and chicory ]
+0019    | OP_CALL             1
+0x100b4b720 allocate 48 for 6
+    [ <script> ][ CoffeeMaker instance ][ coffee and chicory ]
+0000    3 OP_GET_LOCAL        0
+    [ <script> ][ CoffeeMaker instance ][ coffee and chicory ][ CoffeeMaker instance ]
+0002    | OP_GET_LOCAL        1
+    [ <script> ][ CoffeeMaker instance ][ coffee and chicory ][ CoffeeMaker instance ][ coffee and chicory ]
+0004    | OP_SET_PROPERY      0 'coffee'
+    [ <script> ][ CoffeeMaker instance ][ coffee and chicory ][ coffee and chicory ]
+0006    | OP_POP
+    [ <script> ][ CoffeeMaker instance ][ coffee and chicory ]
+0007    4 OP_GET_LOCAL        0
+    [ <script> ][ CoffeeMaker instance ][ coffee and chicory ][ CoffeeMaker instance ]
+0009    | OP_RETURN
+    [ <script> ][ CoffeeMaker instance ]
+0021    | OP_DEFINE_GLOBAL    6 'maker'
+    [ <script> ]
+0023   15 OP_GET_GLOBAL      10 'maker'
+    [ <script> ][ CoffeeMaker instance ]
+0025    | OP_GET_PROPERTY    11 'brew'
+0x100b4b810 allocate 48 for 7
+    [ <script> ][ <fn brew> ]
+0027    | OP_CALL             0
+    [ <script> ][ CoffeeMaker instance ]
+0000    7 OP_CONSTANT         1 'Enjoy your cup of '
+    [ <script> ][ CoffeeMaker instance ][ Enjoy your cup of  ]
+0002    | OP_GET_LOCAL        0
+    [ <script> ][ CoffeeMaker instance ][ Enjoy your cup of  ][ CoffeeMaker instance ]
+0004    | OP_GET_PROPERTY     2 'coffee'
+    [ <script> ][ CoffeeMaker instance ][ Enjoy your cup of  ][ coffee and chicory ]
+0006    | OP_ADD
+0x100b4b870 allocate 48 for 0
+    [ <script> ][ CoffeeMaker instance ][ Enjoy your cup of coffee and chicory ]
+0007    | OP_PRINT
+Enjoy your cup of coffee and chicory
+    [ <script> ][ CoffeeMaker instance ]
+0008   10 OP_GET_LOCAL        0
+    [ <script> ][ CoffeeMaker instance ][ CoffeeMaker instance ]
+0010    | OP_NIL
+    [ <script> ][ CoffeeMaker instance ][ CoffeeMaker instance ][ nil ]
+0011    | OP_SET_PROPERY      3 'coffee'
+    [ <script> ][ CoffeeMaker instance ][ nil ]
+0013    | OP_POP
+    [ <script> ][ CoffeeMaker instance ]
+0014   11 OP_NIL
+    [ <script> ][ CoffeeMaker instance ][ nil ]
+0015    | OP_RETURN
+    [ <script> ][ nil ]
+0029    | OP_POP
+    [ <script> ]
+0030    | OP_NIL
+    [ <script> ][ nil ]
+0031    | OP_RETURN
+0x100b4b870 free type 0
+0x100b4b810 free type 7
+0x100b4b720 free type 6
+0x100b4b6f0 free type 3
+0x100b4afb0 free type 3
+0x100b4af80 free type 5
+0x100b49b90 free type 3
+0x100b49b60 free type 0
+0x100b4b380 free type 0
+0x100b4b270 free type 0
+0x100b4b1f0 free type 1
+0x100b4b1c0 free type 0
+0x100b4b100 free type 0
+0x100b4b040 free type 1
+0x100b4af50 free type 0
+0x100b4aef0 free type 1
+0x100b49c10 free type 2
+0x100b49be0 free type 0
+0x100b49ca0 free type 0

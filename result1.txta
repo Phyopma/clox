@@ -1,0 +1,98 @@
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/phyopyae/Desktop/code-craft-projects.tmp/clox/build
+[  9%] Building C object CMakeFiles/clox.dir/src/compiler.c.o
+[ 18%] Linking C executable clox
+[100%] Built target clox
+0x100e79b60 allocate 48 for 0
+0x100e79c50 allocate 48 for 0
+0x100e7ad70 allocate 40 for 2
+0x100e7af00 allocate 88 for 1
+0x100e7af60 allocate 48 for 0
+0x100e7b050 allocate 88 for 1
+0x100e7b0b0 allocate 88 for 1
+0x100e7b110 allocate 48 for 0
+0x100e7b150 allocate 48 for 0
+== f ==
+0000    4 OP_CONSTANT         1 'not a method'
+0002    | OP_PRINT
+0003    5 OP_NIL
+0004    | OP_RETURN
+0x100e7b330 allocate 48 for 0
+== init ==
+0000    5 OP_CLOSURE          0 <fn f>
+0002    7 OP_GET_LOCAL        0
+0004    | OP_GET_LOCAL        1
+0006    | OP_SET_PROPERY      1 'field'
+0008    | OP_POP
+0009    8 OP_GET_LOCAL        0
+0011    | OP_RETURN
+0x100e7b370 allocate 48 for 0
+== <script> ==
+0000    1 OP_CLASS            0 'Oops'
+0002    | OP_DEFINE_GLOBAL    0 'Oops'
+0004    | OP_GET_GLOBAL       1 'Oops'
+0006    8 OP_CLOSURE          3 <fn init>
+0008    | OP_METHOD           2 'init'
+0010    9 OP_POP
+0011   11 OP_GET_GLOBAL       5 'Oops'
+0013    | OP_CALL             0
+0015    | OP_DEFINE_GLOBAL    4 'oops'
+0017   12 OP_GET_GLOBAL       6 'oops'
+0019    | OP_INVOKE        (0 args)    7 'field'
+0022    | OP_POP
+0023    | OP_NIL
+0024    | OP_RETURN
+0x100e79bb0 allocate 48 for 3
+Runtime Tracing in vm:     [ <script> ]
+0000    1 OP_CLASS            0 'Oops'
+0x100e79be0 allocate 48 for 5
+    [ <script> ][ Oops ]
+0002    | OP_DEFINE_GLOBAL    0 'Oops'
+    [ <script> ]
+0004    | OP_GET_GLOBAL       1 'Oops'
+    [ <script> ][ Oops ]
+0006    8 OP_CLOSURE          3 <fn init>
+0x100e79c10 allocate 48 for 3
+    [ <script> ][ Oops ][ <fn init> ]
+0008    | OP_METHOD           2 'init'
+    [ <script> ][ Oops ]
+0010    9 OP_POP
+    [ <script> ]
+0011   11 OP_GET_GLOBAL       5 'Oops'
+    [ <script> ][ Oops ]
+0013    | OP_CALL             0
+0x100e7b5e0 allocate 48 for 6
+    [ <script> ][ Oops instance ]
+0000    5 OP_CLOSURE          0 <fn f>
+0x100e7b610 allocate 48 for 3
+    [ <script> ][ Oops instance ][ <fn f> ]
+0002    7 OP_GET_LOCAL        0
+    [ <script> ][ Oops instance ][ <fn f> ][ Oops instance ]
+0004    | OP_GET_LOCAL        1
+    [ <script> ][ Oops instance ][ <fn f> ][ Oops instance ][ <fn f> ]
+0006    | OP_SET_PROPERY      1 'field'
+    [ <script> ][ Oops instance ][ <fn f> ][ <fn f> ]
+0008    | OP_POP
+    [ <script> ][ Oops instance ][ <fn f> ]
+0009    8 OP_GET_LOCAL        0
+    [ <script> ][ Oops instance ][ <fn f> ][ Oops instance ]
+0011    | OP_RETURN
+    [ <script> ][ Oops instance ]
+0015    | OP_DEFINE_GLOBAL    4 'oops'
+    [ <script> ]
+0017   12 OP_GET_GLOBAL       6 'oops'
+    [ <script> ][ Oops instance ]
+0019    | OP_INVOKE        (0 args)    7 'field'
+    [ <script> ][ <fn f> ]
+-5722   -1 OP_POP
+    [ <script> ]
+-5721   -1 OP_NIL
+    [ <script> ][ nil ]
+-5720   -1 OP_RETURN
+    [ <script> ][ nil ]
+0019    | OP_INVOKE        (0 args)    7 'field'
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/phyopyae/Desktop/code-craft-projects.tmp/clox/build
+[100%] Built target clox
