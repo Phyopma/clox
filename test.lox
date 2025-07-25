@@ -1,6 +1,11 @@
-class Brioche {}
-var b = Brioche();
+class Nested {
+  method() {
+    fun function() {
+      print this;
+    }
 
-b.gg = 1;
-b.gf = 2;
-print b.gg+b.gf;
+    function();
+  }
+}
+
+Nested().method();

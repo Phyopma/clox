@@ -40,6 +40,14 @@ ObjString *allocateString(char *chars, int length, bool ownChars, uint32_t hash)
     return string;
 }
 
+ObjBoundMethod *newBoundMethod(Value receiver, ObjClosure *method)
+{
+    ObjBoundMethod *bound = ALLOCATE_OBJ(ObjBoundMethod, OBJ_BOUND_METHOD);
+    bound->method = method;
+    bound->receiver = receiver;
+    return bound;
+}
+
 static uint32_t hashString(const char *key, int length)
 {
     uint32_t hash = 2166136261u;
@@ -138,6 +146,7 @@ ObjClosure *newClosure(ObjFunction *function)
 ObjClass *newClass(ObjString *name)
 {
     ObjClass *klass = ALLOCATE_OBJ(ObjClass, OBJ_CLASS);
+    initTable(&klass->methods);
     klass->name = name;
     return klass;
 }
@@ -176,6 +185,9 @@ void printObject(Value value)
         break;
     case OBJ_INSTANCE:
         printf("%s instance", AS_INSTANCE(value)->klass->name->chars);
+        break;
+    case OBJ_BOUND_METHOD:
+        printFunction(AS_BOUND_METHOD(value)->method->function);
         break;
     default:
         break;
