@@ -1,15 +1,20 @@
-class A {
-  method() {
-    print "A";
+class Doughnut {
+  cook() {
+    print "Dunk in the fryer.";
+    this.finish("sprinkles");
+  }
+
+  finish(ingredient) {
+    print "Finish with " + ingredient;
   }
 }
 
-class B < A {
-  method() {
-    var closure = super.method;
-    closure(); // Prints "A".
+class Cruller < Doughnut {
+  finish(ingredient) {
+    // No sprinkles, always icing.
+    super.finish("icing");
   }
 }
 
-var b = B();
-b.method();
+
+Cruller().finish("asdfafd");

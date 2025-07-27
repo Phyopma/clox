@@ -392,7 +392,9 @@ static void namedVariable(Token token, bool canAssign)
         emitBytes(setOp, (uint8_t)arg);
     }
     else
+    {
         emitBytes(getOp, (uint8_t)arg);
+    }
 }
 
 static void variable(bool canAssign)
@@ -819,7 +821,7 @@ static void endScope()
     current->scopeDepth--;
     while (current->localCount > 0 && current->locals[current->localCount - 1].depth > current->scopeDepth)
     {
-        current->localCount--;
+        // current->localCount--;
         if (current->locals[current->localCount - 1].isCaptured)
         {
             emitByte(OP_CLOSE_UPVALUE);
@@ -912,13 +914,14 @@ static void classDeclaration()
     {
         consume(TOKEN_IDENTIFIER, "Expect superclass name.");
         variable(false);
+
         if (identifersEqual(&className, &parser.previous))
         {
             error("A class can't inherit from itself.");
         }
 
         beginScope();
-        addLocal(syntheticToken("super"), true);
+        addLocal(syntheticToken("super"), false);
         defineVariable(0);
 
         namedVariable(className, false);
