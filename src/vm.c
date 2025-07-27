@@ -612,6 +612,44 @@ static InterpretResult run()
 			ip = frame->ip; // don't forget it here too, fuck!
 			break;
 		}
+		case OP_INHERIT:
+		{
+			Value superClass = peek(1);
+			ObjClass *subClass = AS_CLASS(peek(0));
+			if (!IS_CLASS(superClass))
+			{
+				runtimeError("Superclass must be a class");
+				return INTERPRET_RUNTIME_ERROR;
+			}
+			tableAddAll(&AS_CLASS(superClass)->methods, &subClass->methods);
+			pop(); // subclass
+			break;
+		}
+		case OP_GET_SUPER:
+		{
+			ObjString *name = READ_STRING();
+			ObjClass *superclass = AS_CLASS(pop());
+
+			if (!bindMethod(superclass, name))
+			{
+				return INTERPRET_RUNTIME_ERROR;
+			}
+			break;
+		}
+		case OP_SUPER_INVOKE:
+		{
+			ObjString *method = READ_STRING();
+			int argCount = READ_BYTE();
+			frame->ip = ip;
+			ObjClass *superclass = AS_CLASS(pop());
+			if (!invokeFromClass(superclass, method, argCount))
+			{
+				return INTERPRET_RUNTIME_ERROR;
+			}
+			frame = &vm.frames[vm.frameCount - 1];
+			ip = frame->ip;
+			break;
+		}
 		case OP_RETURN:
 		{
 			Value result = pop();
