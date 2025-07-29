@@ -6,6 +6,47 @@
 typedef struct Obj Obj;
 typedef struct ObjString ObjString;
 
+#ifdef NAN_BOXING
+#include <string.h>
+
+typedef uint64_t Value;
+#define QNAN ((uint64_t)0x7ffc000000000000)
+#define TAG_NIL 1   // 01
+#define TAG_FALSE 2 // 10
+#define TAG_TRUE 3  // 11
+#define SIGN_BIT (0x8000000000000000)
+
+#define NUMBER_VAL(num) numToValue(num)
+#define NIL_VAL ((Value)(u_int64_t)(QNAN | TAG_NIL))
+#define FALSE_VAL ((Value)(u_int64_t)(QNAN | TAG_FALSE))
+#define TRUE_VAL ((Value)(u_int64_t)(QNAN | TAG_TRUE))
+#define BOOL_VAL(b) ((Value)b ? TRUE_VAL : FALSE_VAL)
+#define OBJ_VAL(obj) ((Value)(SIGN_BIT | QNAN | (uint64_t)(uintptr_t)obj))
+
+#define IS_NUMBER(val) ((val & QNAN) != QNAN)
+#define IS_NIL(val) (val == NIL_VAL)
+#define IS_BOOL(val) ((val | 1) == TRUE_VAL)
+#define IS_OBJ(val) (((val) & (QNAN | SIGN_BIT)) == (QNAN | SIGN_BIT))
+
+#define AS_NUMBER(val) valueToNumber(val)
+#define AS_BOOL(val) (val == TRUE_VAL)
+#define AS_OBJ(val) ((Obj *)(uintptr_t)(val & ~(SIGN_BIT | QNAN)))
+
+static inline Value numToValue(double num)
+{
+    Value value;
+    memcpy(&value, &num, sizeof(double));
+    return value;
+}
+
+static inline double valueToNumber(Value value)
+{
+    double num;
+    memcpy(&num, &value, sizeof(Value));
+    return num;
+}
+
+#else
 typedef enum
 {
     VAL_BOOL,
@@ -13,7 +54,6 @@ typedef enum
     VAL_OBJ,
     VAL_NUMBER
 } ValueType;
-
 typedef struct
 {
     ValueType type;
@@ -38,6 +78,8 @@ typedef struct
 #define NIL_VAL ((Value){VAL_NIL, {.number = 0}})
 #define OBJ_VAL(object) ((Value){VAL_OBJ, {.obj = (Obj *)object}})
 #define NUMBER_VAL(value) ((Value){VAL_NUMBER, {.number = value}})
+
+#endif
 typedef struct
 {
     int capacity;
